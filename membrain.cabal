@@ -1,0 +1,87 @@
+cabal-version:       2.0
+name:                membrain
+version:             0.0.0
+synopsis:            Type-safe memory units
+description:         Type-safe memory units
+homepage:            https://github.com/kowainik/membrain
+bug-reports:         https://github.com/kowainik/membrain/issues
+license:             MPL-2.0
+license-file:        LICENSE
+author:              Kowainik
+maintainer:          xrom.xkov@gmail.com
+copyright:           2018 Kowainik
+category:            Memory, Safe
+build-type:          Simple
+extra-doc-files:     README.md
+                   , CHANGELOG.md
+tested-with:         GHC == 8.2.2, GHC == 8.4.4
+
+source-repository head
+  type:                git
+  location:            https://github.com/kowainik/membrain.git
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Membrain
+                       
+
+  build-depends:       base >= 4.10.1.0 && < 4.12
+                     
+
+  ghc-options:         -Wall
+                       -Wincomplete-uni-patterns
+                       -Wincomplete-record-updates
+                       -Wcompat
+                       -Widentities
+                       -Wredundant-constraints
+                       -fhide-source-paths
+
+  default-language:    Haskell2010
+  default-extensions:  ConstraintKinds
+                       DeriveGeneric
+                       GeneralizedNewtypeDeriving
+                       InstanceSigs
+                       KindSignatures
+                       LambdaCase
+                       OverloadedStrings
+                       RecordWildCards
+                       ScopedTypeVariables
+                       StandaloneDeriving
+                       TupleSections
+                       TypeApplications
+                       ViewPatterns
+
+test-suite membrain-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+
+  build-depends:       base >= 4.10.1.0 && < 4.12
+                     , membrain
+                     
+
+  ghc-options:         -Wall
+                       -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+                       -Wincomplete-uni-patterns
+                       -Wincomplete-record-updates
+                       -Wcompat
+                       -Widentities
+                       -Wredundant-constraints
+                       -fhide-source-paths
+
+  default-language:    Haskell2010
+  default-extensions:  ConstraintKinds
+                       DeriveGeneric
+                       GeneralizedNewtypeDeriving
+                       InstanceSigs
+                       KindSignatures
+                       LambdaCase
+                       OverloadedStrings
+                       RecordWildCards
+                       ScopedTypeVariables
+                       StandaloneDeriving
+                       TupleSections
+                       TypeApplications
+                       ViewPatterns
