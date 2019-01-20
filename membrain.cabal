@@ -9,12 +9,14 @@ license:             MPL-2.0
 license-file:        LICENSE
 author:              Kowainik
 maintainer:          xrom.xkov@gmail.com
-copyright:           2018 Kowainik
+copyright:           2018-present Kowainik
 category:            Memory, Safe
 build-type:          Simple
 extra-doc-files:     README.md
                    , CHANGELOG.md
-tested-with:         GHC == 8.2.2, GHC == 8.4.4
+tested-with:         GHC == 8.2.2
+                   , GHC == 8.4.4
+                   , GHC == 8.6.3
 
 source-repository head
   type:                git
@@ -23,10 +25,8 @@ source-repository head
 library
   hs-source-dirs:      src
   exposed-modules:     Membrain
-                       
 
-  build-depends:       base >= 4.10.1.0 && < 4.12
-                     
+  build-depends:       base >= 4.10.1.0 && < 4.13
 
   ghc-options:         -Wall
                        -Wincomplete-uni-patterns
@@ -56,9 +56,9 @@ test-suite membrain-test
   hs-source-dirs:      test
   main-is:             Spec.hs
 
-  build-depends:       base >= 4.10.1.0 && < 4.12
+  build-depends:       base >= 4.10.1.0 && < 4.13
                      , membrain
-                     
+
 
   ghc-options:         -Wall
                        -threaded
