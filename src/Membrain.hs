@@ -1,6 +1,7 @@
+-- | Type-safe memory units.
+
 module Membrain
-       ( someFunc
+       ( module Membrain.Memory
        ) where
 
-someFunc :: IO ()
-someFunc = putStrLn ("someFunc" :: String)
+import Membrain.Memory
