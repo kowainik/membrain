@@ -25,6 +25,7 @@ source-repository head
 library
   hs-source-dirs:      src
   exposed-modules:     Membrain
+                         Membrain.Memory
 
   build-depends:       base >= 4.10.1.0 && < 4.13
 
