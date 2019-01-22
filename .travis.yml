@@ -17,13 +17,7 @@ matrix:
   - ghc: 8.2.2
   - ghc: 8.4.4
   - ghc: 8.6.3
-  
-  - ghc: 8.2.2
-    env: STACK_YAML="$TRAVIS_BUILD_DIR/stack-8.2.2.yaml"
-  
-  - ghc: 8.4.4
-    env: STACK_YAML="$TRAVIS_BUILD_DIR/stack-8.4.4.yaml"
-  
+
   - ghc: 8.6.3
     env: STACK_YAML="$TRAVIS_BUILD_DIR/stack.yaml"
 
@@ -47,7 +41,7 @@ script:
     fi
 
   # HLint check
-  - curl -sSL https://raw.github.com/ndmitchell/neil/master/misc/travis.sh | sh -s -- hlint .
+  - curl -sSL https://raw.github.com/ndmitchell/neil/master/misc/travis.sh | sh -s -- hlint -XTypeApplications .
 
 notifications:
   email: false
