@@ -37,7 +37,7 @@ newtype Memory (mem :: Nat) = Memory
 -- | Creates 'Memory' of unit 'mem' by given 'Natural' number.
 -- 'Memory's smart constructor.
 memory :: forall (mem :: Nat) . KnownNat mem => Natural -> Memory mem
-memory = Memory . (*) (nat @mem)
+memory = Memory . (* nat @mem)
 {-# INLINE memory #-}
 
 {- | Convert memory from one unit to another. __Note:__ this changes only view,
@@ -52,11 +52,6 @@ toMemory = coerce
 toBits :: Memory mem -> Natural
 toBits = coerce
 {-# INLINE toBits #-}
-
-
-nat :: forall (mem :: Nat) . KnownNat mem => Natural
-nat = natVal (Proxy @mem)
-{-# INLINE nat #-}
 
 -- | Lossless 'Memory' conversion to rational number.
 toRat :: forall (mem :: Nat) . KnownNat mem => Memory mem -> Ratio Natural
@@ -80,3 +75,11 @@ floor = Prelude.floor . toRat
 {-# SPECIALIZE floor :: KnownNat mem => Memory mem -> Word    #-}
 {-# SPECIALIZE floor :: KnownNat mem => Memory mem -> Integer #-}
 {-# SPECIALIZE floor :: KnownNat mem => Memory mem -> Natural #-}
+
+----------------------------------------------------------------------------
+-- Internal
+----------------------------------------------------------------------------
+
+nat :: forall (mem :: Nat) . KnownNat mem => Natural
+nat = natVal (Proxy @mem)
+{-# INLINE nat #-}
