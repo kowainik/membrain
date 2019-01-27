@@ -1,11 +1,13 @@
-{-# LANGUAGE DataKinds  #-}
-{-# LANGUAGE TypeInType #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE TypeInType          #-}
 
 -- | This module contains 'Memory' data type.
 
 module Membrain.Memory
        ( -- * Data type
          Memory (..)
+       , memory
        , toMemory
 
          -- * Conversion functions
@@ -32,6 +34,12 @@ newtype Memory (mem :: Nat) = Memory
     { unMemory :: Natural
     } deriving (Show, Eq)
 
+-- | Creates 'Memory' of unit 'mem' by given 'Natural' number.
+-- 'Memory's smart constructor.
+memory :: forall (mem :: Nat) . KnownNat mem => Natural -> Memory mem
+memory = Memory . (*) (nat @mem)
+{-# INLINE memory #-}
+
 {- | Convert memory from one unit to another. __Note:__ this changes only view,
 not model. So this operation has zero runtime cost.
 -}
@@ -45,9 +53,14 @@ toBits :: Memory mem -> Natural
 toBits = coerce
 {-# INLINE toBits #-}
 
+
+nat :: forall (mem :: Nat) . KnownNat mem => Natural
+nat = natVal (Proxy @mem)
+{-# INLINE nat #-}
+
 -- | Lossless 'Memory' conversion to rational number.
 toRat :: forall (mem :: Nat) . KnownNat mem => Memory mem -> Ratio Natural
-toRat (Memory m) = m % natVal (Proxy @mem)
+toRat (Memory m) = m % nat @mem
 {-# INLINE toRat #-}
 
 {- | Floor 'Memory' unit to integral number. This function may lose some
