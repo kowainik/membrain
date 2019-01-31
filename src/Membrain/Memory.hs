@@ -45,9 +45,9 @@ measures. The following math fact is used to display 'Memory'.
 A decimal representation written with a repeating final @0@ is said to terminate
 before these zeros. Instead of @1.585000...@ one simply writes @1.585@. The
 decimal is also called a terminating decimal. Terminating decimals represent
-rational numbers of the form  \( \cfrac{k}{2^n 5^m} \).
-
-If you use unconventional units, this operation will hang. TODO: check this statically
+rational numbers of the form \( \cfrac{k}{2^n 5^m} \). If you use units of
+different form then 'show' function for 'Memory' hangs. TODO: check this
+statically
 -}
 instance (KnownNat mem, KnownUnitSymbol mem) => Show (Memory mem) where
     show :: Memory mem -> String
