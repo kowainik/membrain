@@ -1,9 +1,12 @@
-{-# LANGUAGE CPP           #-}
-{-# LANGUAGE DataKinds     #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE CPP                 #-}
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE FlexibleContexts    #-}
+{-# LANGUAGE TypeFamilies        #-}
+{-# LANGUAGE TypeOperators       #-}
 #if ( __GLASGOW_HASKELL__ >= 806 )
-{-# LANGUAGE NoStarIsType  #-}
+{-# LANGUAGE NoStarIsType        #-}
 #endif
-{-# LANGUAGE TypeOperators #-}
 
 {- | This module contains type aliases for memory data units.
 
@@ -37,34 +40,15 @@ module Membrain.Units
        , Zebibyte
        , Yobibyte
 
-         -- * Smart constructors
-       , bit
-       , nibble
-       , byte
-
-       , kilobyte
-       , megabyte
-       , gigabyte
-       , terabyte
-       , petabyte
-       , exabyte
-       , zettabyte
-       , yottabyte
-
-       , kibibyte
-       , mebibyte
-       , gibibyte
-       , tebibyte
-       , pebibyte
-       , exbibyte
-       , zebibyte
-       , yobibyte
+         -- * Unit symbols
+       , UnitSymbol
+       , KnownUnitSymbol
+       , unitSymbol
        ) where
 
-import GHC.Natural (Natural)
-import GHC.TypeNats (type (*))
-
-import Membrain.Memory (Memory (..), memory)
+import Data.Proxy (Proxy (..))
+import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
+import GHC.TypeNats (type (*), Nat)
 
 
 type Bit       = 1
@@ -89,97 +73,35 @@ type Exbibyte  = 1024 * Pebibyte
 type Zebibyte  = 1024 * Exbibyte
 type Yobibyte  = 1024 * Zebibyte
 
--- | Creates 'Memory' in 'Bit's from given 'Natural' as the number of bits.
-bit :: Natural -> Memory Bit
-bit = Memory
-{-# INLINE bit #-}
+-- | Type-level function to map memory units multipliers to proper symbols.
+type family UnitSymbol (unit :: Nat) :: Symbol
 
--- | Creates 'Memory' in 'Nibble's from given 'Natural' as the number of nibbles.
-nibble :: Natural -> Memory Nibble
-nibble = memory
-{-# INLINE nibble #-}
+type instance UnitSymbol 1 = "b"
+type instance UnitSymbol 4 = "n"
+type instance UnitSymbol 8 = "B"
 
--- | Creates 'Memory' in 'Byte's from given 'Natural' as the number of bytes.
-byte :: Natural -> Memory Byte
-byte = memory
-{-# INLINE byte #-}
+type instance UnitSymbol 8000                      = "KB"
+type instance UnitSymbol 8000000                   = "MB"
+type instance UnitSymbol 8000000000                = "GB"
+type instance UnitSymbol 8000000000000             = "TB"
+type instance UnitSymbol 8000000000000000          = "PB"
+type instance UnitSymbol 8000000000000000000       = "EB"
+type instance UnitSymbol 8000000000000000000000    = "ZB"
+type instance UnitSymbol 8000000000000000000000000 = "YB"
 
--- | Creates 'Memory' in 'Kilobyte's from given 'Natural' as the number of kilobytes.
-kilobyte :: Natural -> Memory Kilobyte
-kilobyte = memory
-{-# INLINE kilobyte #-}
+type instance UnitSymbol 8192                      = "KiB"
+type instance UnitSymbol 8388608                   = "MiB"
+type instance UnitSymbol 8589934592                = "GiB"
+type instance UnitSymbol 8796093022208             = "TiB"
+type instance UnitSymbol 9007199254740992          = "PiB"
+type instance UnitSymbol 9223372036854775808       = "EiB"
+type instance UnitSymbol 9444732965739290427392    = "ZiB"
+type instance UnitSymbol 9671406556917033397649408 = "YiB"
 
--- | Creates 'Memory' in 'Megabyte's from given 'Natural' as the number of megabytes.
-megabyte :: Natural -> Memory Megabyte
-megabyte = memory
-{-# INLINE megabyte #-}
+-- | Constraint alias for 'KnownSymbol' calculated by 'UnitSymbol'.
+type KnownUnitSymbol (mem :: Nat) = KnownSymbol (UnitSymbol mem)
 
--- | Creates 'Memory' in 'Gigabyte's from given 'Natural' as the number of gigabytes.
-gigabyte :: Natural -> Memory Gigabyte
-gigabyte = memory
-{-# INLINE gigabyte #-}
-
--- | Creates 'Memory' in 'Terabyte's from given 'Natural' as the number of terabytes.
-terabyte :: Natural -> Memory Terabyte
-terabyte = memory
-{-# INLINE terabyte #-}
-
--- | Creates 'Memory' in 'Petabyte's from given 'Natural' as the number of petabytes.
-petabyte :: Natural -> Memory Petabyte
-petabyte = memory
-{-# INLINE petabyte #-}
-
--- | Creates 'Memory' in 'Exabyte's from given 'Natural' as the number of exabytes.
-exabyte :: Natural -> Memory Exabyte
-exabyte = memory
-{-# INLINE exabyte #-}
-
--- | Creates 'Memory' in 'Zettabyte's from given 'Natural' as the number of zettabytes.
-zettabyte :: Natural -> Memory Zettabyte
-zettabyte = memory
-{-# INLINE zettabyte #-}
-
--- | Creates 'Memory' in 'Yottabyte's from given 'Natural' as the number of yottabytes.
-yottabyte :: Natural -> Memory Yottabyte
-yottabyte = memory
-{-# INLINE yottabyte #-}
-
--- | Creates 'Memory' in 'Kibibyte's from given 'Natural' as the number of kibibytes.
-kibibyte :: Natural -> Memory Kibibyte
-kibibyte = memory
-{-# INLINE kibibyte #-}
-
--- | Creates 'Memory' in 'Mebibyte's from given 'Natural' as the number of mebibytes.
-mebibyte :: Natural -> Memory Mebibyte
-mebibyte = memory
-{-# INLINE mebibyte #-}
-
--- | Creates 'Memory' in 'Gibibyte's from given 'Natural' as the number of gibibytes.
-gibibyte :: Natural -> Memory Gibibyte
-gibibyte = memory
-{-# INLINE gibibyte #-}
-
--- | Creates 'Memory' in 'Tebibyte's from given 'Natural' as the number of tebibytes.
-tebibyte :: Natural -> Memory Tebibyte
-tebibyte = memory
-{-# INLINE tebibyte #-}
-
--- | Creates 'Memory' in 'Pebibyte's from given 'Natural' as the number of pebibytes.
-pebibyte :: Natural -> Memory Pebibyte
-pebibyte = memory
-{-# INLINE pebibyte #-}
-
--- | Creates 'Memory' in 'Exbibyte's from given 'Natural' as the number of exbibytes.
-exbibyte :: Natural -> Memory Exbibyte
-exbibyte = memory
-{-# INLINE exbibyte #-}
-
--- | Creates 'Memory' in 'Zebibyte's from given 'Natural' as the number of zebibytes.
-zebibyte :: Natural -> Memory Zebibyte
-zebibyte = memory
-{-# INLINE zebibyte #-}
-
--- | Creates 'Memory' in 'Yobibyte's from given 'Natural' as the number of yobibytes.
-yobibyte :: Natural -> Memory Yobibyte
-yobibyte = memory
-{-# INLINE yobibyte #-}
+-- | Term-level function to get value of type family 'UnitSymbol'.
+unitSymbol :: forall (mem :: Nat) . KnownUnitSymbol mem => String
+unitSymbol = symbolVal $ Proxy @(UnitSymbol mem)
+{-# INLINE unitSymbol #-}
