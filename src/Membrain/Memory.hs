@@ -11,6 +11,7 @@ module Membrain.Memory
          Memory (..)
        , memory
        , toMemory
+       , showMemory
 
          -- * Conversion functions
        , toBits
@@ -36,9 +37,10 @@ which is type level representation of the unit.
 -}
 newtype Memory (mem :: Nat) = Memory
     { unMemory :: Natural
-    } deriving (Eq)
+    } deriving (Show, Read, Eq, Ord)
 
-{- | 'Show' instance for 'Memory' shows value as 'Double' with measure unit
+{- |
+This 'showMemory' function shows 'Memory' value as 'Double' with measure unit
 suffix. It shows 'Memory' losslessly while used with standardized units of
 measures. The following math fact is used to display 'Memory'.
 
@@ -46,31 +48,30 @@ A decimal representation written with a repeating final @0@ is said to terminate
 before these zeros. Instead of @1.585000...@ one simply writes @1.585@. The
 decimal is also called a terminating decimal. Terminating decimals represent
 rational numbers of the form \( \cfrac{k}{2^n 5^m} \). If you use units of the
-different form then the 'show' function for 'Memory' hangs. TODO: check this
-statically
+different form then the 'show' function for 'Memory' hangs.
+TODO: check this statically
 -}
-instance (KnownNat mem, KnownUnitSymbol mem) => Show (Memory mem) where
-    show :: Memory mem -> String
-    show (Memory m) = showFrac m (nat @mem) ++ unitSymbol @mem
+showMemory :: forall mem . (KnownNat mem, KnownUnitSymbol mem) => Memory mem -> String
+showMemory (Memory m) = showFrac m (nat @mem) ++ unitSymbol @mem
+  where
+    showFrac :: Natural -> Natural -> String
+    showFrac number d = goIntegral number
       where
-        showFrac :: Natural -> Natural -> String
-        showFrac number d = goIntegral number
-          where
-            -- take integral part of fraction
-            goIntegral :: Natural -> String
-            goIntegral n =
-                let (q, r) = n `divMod` d
-                    integral = show q
-                in if r == 0
-                   then integral
-                   else integral ++ '.' : goFractional r
+        -- take integral part of fraction
+        goIntegral :: Natural -> String
+        goIntegral n =
+            let (q, r) = n `divMod` d
+                integral = show q
+            in if r == 0
+               then integral
+               else integral ++ '.' : goFractional r
 
-            -- convert reminder to fractional part
-            goFractional :: Natural -> String
-            goFractional 0 = ""
-            goFractional n =
-                let (q, r) = (n * 10) `divMod` d
-                in show q ++ goFractional r
+        -- convert reminder to fractional part
+        goFractional :: Natural -> String
+        goFractional 0 = ""
+        goFractional n =
+            let (q, r) = (n * 10) `divMod` d
+            in show q ++ goFractional r
 
 -- | Creates 'Memory' of unit 'mem' by given 'Natural' number.
 -- 'Memory's smart constructor.
