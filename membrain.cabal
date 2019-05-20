@@ -53,6 +53,7 @@ library
   import:              common-options
   hs-source-dirs:      src
   exposed-modules:     Membrain
+                         Membrain.Base
                          Membrain.Constructors
                          Membrain.Memory
                          Membrain.Units
