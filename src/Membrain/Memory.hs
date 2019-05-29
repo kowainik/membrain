@@ -20,9 +20,9 @@ module Membrain.Memory
        ) where
 
 import Prelude hiding (floor)
-import qualified Prelude
 
 import Data.Coerce (coerce)
+import Data.Foldable (foldl')
 import Data.Kind (Type)
 import Data.Proxy (Proxy (..))
 import Data.Ratio (Ratio, (%))
@@ -31,6 +31,8 @@ import Numeric.Natural (Natural)
 
 import Membrain.Units (KnownUnitSymbol, unitSymbol)
 
+import qualified Prelude
+
 
 {- | Main memory units type. It has phantom type parameter @mem@ of kind 'Nat'
 which is type level representation of the unit.
@@ -38,6 +40,24 @@ which is type level representation of the unit.
 newtype Memory (mem :: Nat) = Memory
     { unMemory :: Natural
     } deriving (Show, Read, Eq, Ord)
+
+instance Semigroup (Memory (mem :: Nat)) where
+    (<>) :: Memory mem -> Memory mem -> Memory mem
+    (<>) = coerce ((+) @Natural)
+    {-# INLINE (<>) #-}
+
+instance Monoid (Memory (mem :: Nat)) where
+    mempty :: Memory mem
+    mempty = Memory 0
+    {-# INLINE mempty #-}
+
+    mappend :: Memory mem -> Memory mem -> Memory mem
+    mappend = (<>)
+    {-# INLINE mappend #-}
+
+    mconcat :: [Memory mem] -> Memory mem
+    mconcat = foldl' (<>) mempty
+    {-# INLINE mconcat #-}
 
 {- |
 This 'showMemory' function shows 'Memory' value as 'Double' with measure unit
