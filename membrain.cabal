@@ -65,10 +65,11 @@ test-suite membrain-test
   main-is:             Spec.hs
   other-modules:       Test.Memory.Laws
                        Test.Memory.TypeLevel
+                       Test.Memory.ValueLevel
 
   build-depends:       membrain
                      , hedgehog ^>= 1.0
+                     , hspec ^>= 2.7.1
                      , type-spec ^>= 0.4.0.0
-
 
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
