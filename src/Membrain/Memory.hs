@@ -17,6 +17,12 @@ module Membrain.Memory
        , toBits
        , toRat
        , floor
+
+         -- * Numeric operations
+       , memoryMul
+       , memoryDiff
+       , memoryPlus
+       , memoryDiv
        ) where
 
 import Prelude hiding (floor)
@@ -109,8 +115,10 @@ memory :: forall (mem :: Nat) . KnownNat mem => Natural -> Memory mem
 memory = Memory . (* nat @mem)
 {-# INLINE memory #-}
 
-{- | Convert memory from one unit to another. __Note:__ this changes only view,
-not model. So this operation has zero runtime cost.
+{- | Convert memory from one unit to another.
+
+__Note:__ this changes only view, not model.
+So this operation has zero runtime cost.
 -}
 toMemory :: forall (to :: Nat) (from :: Nat) . Memory from -> Memory to
 toMemory = coerce
@@ -144,6 +152,56 @@ floor = Prelude.floor . toRat
 {-# SPECIALIZE floor :: KnownNat mem => Memory mem -> Word    #-}
 {-# SPECIALIZE floor :: KnownNat mem => Memory mem -> Integer #-}
 {-# SPECIALIZE floor :: KnownNat mem => Memory mem -> Natural #-}
+
+----------------------------------------------------------------------------
+-- Numeric functions
+----------------------------------------------------------------------------
+
+{- | Returns the result of multiplication 'Natural with the given 'Memory value
+
+>>> memoryMul 2 (byte 4)
+Memory {unMemory = 64}
+-}
+memoryMul  :: Natural -> Memory mem -> Memory mem
+memoryMul = stimes
+{-# INLINE memoryMul #-}
+
+
+{- | Returns the result of comparison of two 'Memory' values
+and the difference between them as another 'Memory' of the same unit.
+
+>>> memoryDiff (bit 4) (bit 8)
+(LT,Memory {unMemory = 4})
+>>> memoryDiff (byte 8) (byte 4)
+(GT,Memory {unMemory = 32})
+>>> :t it
+it :: (Ordering, Memory Byte)
+-}
+memoryDiff :: Memory mem -> Memory mem -> (Ordering, Memory mem)
+memoryDiff (Memory m1) (Memory m2) = case compare m1 m2 of
+    LT -> (LT, Memory $ m2 - m1)
+    GT -> (GT, Memory $ m1 - m2)
+    EQ -> (EQ, Memory 0)
+{-# INLINE memoryDiff #-}
+
+{- | Returns the result of addition of two 'Memory' values casted
+to the second memory unit.
+
+>>> memoryPlus (bit 8) (megabite 2)
+Memory {unMemory = 16000008}
+-}
+memoryPlus :: Memory mem1 -> Memory mem2 -> Memory mem2
+memoryPlus m1 = (<>) (toMemory m1)
+{-# INLINE memoryPlus #-}
+
+{- | Retuns the reult of division of two 'Memory' values of any units.
+
+>>> memoryDiv (kilobyte 3) (byte 2)
+1500 % 1
+-}
+memoryDiv :: Memory mem1 -> Memory mem2 -> Ratio Natural
+memoryDiv (Memory m1) (Memory m2) = m1 % m2
+{-# INLINE memoryDiv #-}
 
 ----------------------------------------------------------------------------
 -- Internal
