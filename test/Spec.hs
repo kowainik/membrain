@@ -15,7 +15,7 @@ main = do
 hedgehogTests :: Group
 hedgehogTests = Group "Roundtrip properties"
     [ semigroupLaw      `named` "Semigroup: x <> (y <> z) ≡ (x <> y) <> z"
-    , monoidIdentityLaw `named` "Monoid Identity: x <> mempty = x"
+    , monoidIdentityLaw `named` "Monoid Identity: x <> mempty ≡ x"
     ]
   where
     named :: a -> b -> (b, a)
