@@ -3,6 +3,7 @@ module Test.Memory.Laws
        , monoidIdentityLaw
        ) where
 
+import Data.Semigroup (Semigroup (..))
 import Hedgehog (MonadGen, Property, forAll, property, (===))
 import Numeric.Natural (Natural)
 
