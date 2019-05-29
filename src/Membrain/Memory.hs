@@ -24,8 +24,10 @@ import Prelude hiding (floor)
 import Data.Coerce (coerce)
 import Data.Foldable (foldl')
 import Data.Kind (Type)
+import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy (Proxy (..))
 import Data.Ratio (Ratio, (%))
+import Data.Semigroup (Semigroup (..))
 import GHC.TypeNats (KnownNat, Nat, natVal)
 import Numeric.Natural (Natural)
 
@@ -45,6 +47,14 @@ instance Semigroup (Memory (mem :: Nat)) where
     (<>) :: Memory mem -> Memory mem -> Memory mem
     (<>) = coerce ((+) @Natural)
     {-# INLINE (<>) #-}
+
+    sconcat :: NonEmpty (Memory mem) -> Memory mem
+    sconcat = foldl' (<>) mempty
+    {-# INLINE sconcat #-}
+
+    stimes :: Integral b => b -> Memory mem -> Memory mem
+    stimes n (Memory m) = Memory (fromIntegral n * m)
+    {-# INLINE stimes #-}
 
 instance Monoid (Memory (mem :: Nat)) where
     mempty :: Memory mem
