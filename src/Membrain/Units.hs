@@ -73,7 +73,21 @@ type Exbibyte  = 1024 * Pebibyte
 type Zebibyte  = 1024 * Exbibyte
 type Yobibyte  = 1024 * Zebibyte
 
--- | Type-level function to map memory units multipliers to proper symbols.
+{- | Type-level function to map memory units multipliers to proper symbols.
+
+>>> :kind! UnitSymbol Bit
+UnitSymbol Bit :: Symbol
+= "b"
+>>> :kind! UnitSymbol Byte
+UnitSymbol Byte :: Symbol
+= "B"
+>>> :kind! UnitSymbol Kilobyte
+UnitSymbol Kilobyte :: Symbol
+= "KB"
+>>> :kind! UnitSymbol Mebibyte
+UnitSymbol Mebibyte :: Symbol
+= "MiB"
+-}
 type family UnitSymbol (unit :: Nat) :: Symbol
 
 type instance UnitSymbol 1 = "b"
@@ -101,7 +115,14 @@ type instance UnitSymbol 9671406556917033397649408 = "YiB"
 -- | Constraint alias for 'KnownSymbol' calculated by 'UnitSymbol'.
 type KnownUnitSymbol (mem :: Nat) = KnownSymbol (UnitSymbol mem)
 
--- | Term-level function to get value of type family 'UnitSymbol'.
+{- | Term-level function to get value of the 'UnitSymbol' type family. Can be used
+only with @-XTypeApplications@.
+
+>>> unitSymbol @Terabyte
+"TB"
+>>> unitSymbol @Yobibyte
+"YiB"
+-}
 unitSymbol :: forall (mem :: Nat) . KnownUnitSymbol mem => String
 unitSymbol = symbolVal $ Proxy @(UnitSymbol mem)
 {-# INLINE unitSymbol #-}

@@ -74,6 +74,11 @@ the argument is ignored. Returns 'Nothing' for types that do not have a fixed
 bitsize, like 'Integer'.
 
 Type safe version of the 'Base.bitSizeMaybe' function.
+
+>>> bitSizeMaybe (0 :: Int)
+Just (Memory {unMemory = 64})
+>>> bitSizeMaybe (0 :: Integer)
+Nothing
 -}
 bitSizeMaybe :: Base.Bits a => a -> Maybe (Memory Bit)
 bitSizeMaybe x = bit . fromIntegral <$> Base.bitSizeMaybe x
@@ -82,6 +87,11 @@ bitSizeMaybe x = bit . fromIntegral <$> Base.bitSizeMaybe x
 {- | Return the number of bits in the type of the argument. The actual value of the argument is ignored.
 
 Type safe version of the 'Base.finiteBitSize' function.
+
+>>> finiteBitSize False
+Memory {unMemory = 1}
+>>> finiteBitSize (0 :: Int)
+Memory {unMemory = 64}
 -}
 finiteBitSize :: FiniteBits b => b -> Memory Bit
 finiteBitSize = bit . fromIntegral . Base.finiteBitSize
@@ -96,6 +106,15 @@ which represents the amount of bytes.
 
 Computes the storage requirements (in bytes) of the argument. The value of the
 argument is not used.
+
+>>> sizeOf True
+Memory {unMemory = 32}
+>>> sizeOf 'x'
+Memory {unMemory = 32}
+>>> sizeOf (0 :: Int)
+Memory {unMemory = 64}
+>>> sizeOf (0.0 :: Double)
+Memory {unMemory = 64}
 -}
 sizeOf :: Storable a => a -> Memory Byte
 sizeOf = byte . fromIntegral . Base.sizeOf
