@@ -42,13 +42,24 @@ import Membrain.Units (KnownUnitSymbol, unitSymbol)
 import qualified Prelude
 
 
+{- $setup
+>>> import Membrain
+-}
+
 {- | Main memory units type. It has phantom type parameter @mem@ of kind 'Nat'
-which is type level representation of the unit.
+which is type level representation of the unit. Stores internally memory as
+bits. To construct values of type 'Memory', use functions from the
+"Membrain.Constructors" module.
 -}
 newtype Memory (mem :: Nat) = Memory
     { unMemory :: Natural
     } deriving (Show, Read, Eq, Ord)
 
+{- | Semigroup over addition.
+
+>>> byte 2 <> byte 5
+Memory {unMemory = 56}
+-}
 instance Semigroup (Memory (mem :: Nat)) where
     (<>) :: Memory mem -> Memory mem -> Memory mem
     (<>) = coerce ((+) @Natural)
@@ -85,7 +96,9 @@ before these zeros. Instead of @1.585000...@ one simply writes @1.585@. The
 decimal is also called a terminating decimal. Terminating decimals represent
 rational numbers of the form \( \cfrac{k}{2^n 5^m} \). If you use units of the
 different form then the 'show' function for 'Memory' hangs.
-TODO: check this statically
+
+>>> showMemory (Memory 22 :: Memory Byte)
+"2.75B"
 -}
 showMemory :: forall mem . (KnownNat mem, KnownUnitSymbol mem) => Memory mem -> String
 showMemory (Memory m) = showFrac m (nat @mem) ++ unitSymbol @mem
@@ -109,8 +122,12 @@ showMemory (Memory m) = showFrac m (nat @mem) ++ unitSymbol @mem
             let (q, r) = (n * 10) `divMod` d
             in show q ++ goFractional r
 
--- | Creates 'Memory' of unit 'mem' by given 'Natural' number.
--- 'Memory's smart constructor.
+{- | Creates 'Memory' of unit @mem@ by the given 'Natural' number. 'Memory's
+smart constructor.
+
+>>> memory @Byte 3
+Memory {unMemory = 24}
+-}
 memory :: forall (mem :: Nat) . KnownNat mem => Natural -> Memory mem
 memory = Memory . (* nat @mem)
 {-# INLINE memory #-}
@@ -119,18 +136,34 @@ memory = Memory . (* nat @mem)
 
 __Note:__ this changes only view, not model.
 So this operation has zero runtime cost.
+
+>>> showMemory $ toMemory @Kilobyte $ byte 100
+"0.1KB"
+>>> showMemory $ toMemory @Kibibyte $ byte 100
+"0.09765625KiB"
 -}
 toMemory :: forall (to :: Nat) (from :: Nat) . Memory from -> Memory to
 toMemory = coerce
 {-# INLINE toMemory #-}
 
 {- | Lossless 'Memory' conversion to bits. Alias to 'unMemory'.
+
+>>> toBits $ byte 1
+8
+>>> toBits $ kilobyte 1
+8000
 -}
 toBits :: Memory mem -> Natural
 toBits = coerce
 {-# INLINE toBits #-}
 
--- | Lossless 'Memory' conversion to rational number.
+{- | Lossless 'Memory' conversion to rational number.
+
+>>> toRat $ byte 4
+4 % 1
+>>> toRat $ toMemory @Byte $ bit 22
+11 % 4
+-}
 toRat :: forall (mem :: Nat) . KnownNat mem => Memory mem -> Ratio Natural
 toRat (Memory m) = m % nat @mem
 {-# INLINE toRat #-}
@@ -140,6 +173,11 @@ information, so use only when:
 
 1. You don't care about losing information.
 2. You are sure that there will be no loss.
+
+>>> floor $ byte 4
+4
+>>> floor $ toMemory @Byte $ bit 22
+2
 -}
 floor
     :: forall (n :: Type) (mem :: Nat) .
@@ -157,7 +195,7 @@ floor = Prelude.floor . toRat
 -- Numeric functions
 ----------------------------------------------------------------------------
 
-{- | Returns the result of multiplication 'Natural with the given 'Memory value
+{- | Returns the result of multiplication 'Natural' with the given 'Memory' value
 
 >>> memoryMul 2 (byte 4)
 Memory {unMemory = 64}
@@ -166,7 +204,6 @@ memoryMul  :: Natural -> Memory mem -> Memory mem
 memoryMul = stimes
 {-# INLINE memoryMul #-}
 
-
 {- | Returns the result of comparison of two 'Memory' values
 and the difference between them as another 'Memory' of the same unit.
 
@@ -174,8 +211,8 @@ and the difference between them as another 'Memory' of the same unit.
 (LT,Memory {unMemory = 4})
 >>> memoryDiff (byte 8) (byte 4)
 (GT,Memory {unMemory = 32})
->>> :t it
-it :: (Ordering, Memory Byte)
+>>> memoryDiff (kilobyte 2) (kilobyte 2)
+(EQ,Memory {unMemory = 0})
 -}
 memoryDiff :: Memory mem -> Memory mem -> (Ordering, Memory mem)
 memoryDiff (Memory m1) (Memory m2) = case compare m1 m2 of
@@ -187,14 +224,14 @@ memoryDiff (Memory m1) (Memory m2) = case compare m1 m2 of
 {- | Returns the result of addition of two 'Memory' values casted
 to the second memory unit.
 
->>> memoryPlus (bit 8) (megabite 2)
+>>> memoryPlus (bit 8) (megabyte 2)
 Memory {unMemory = 16000008}
 -}
 memoryPlus :: Memory mem1 -> Memory mem2 -> Memory mem2
 memoryPlus m1 = (<>) (toMemory m1)
 {-# INLINE memoryPlus #-}
 
-{- | Retuns the reult of division of two 'Memory' values of any units.
+{- | Retuns the result of division of two 'Memory' values of any units.
 
 >>> memoryDiv (kilobyte 3) (byte 2)
 1500 % 1
