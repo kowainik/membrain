@@ -5,7 +5,14 @@
 {-# LANGUAGE TypeInType                #-}
 {-# LANGUAGE UndecidableInstances      #-}
 
--- | This module contains 'Memory' data type.
+{- | This module contains 'Memory' data type and various utility functions:
+
+1. Create values of type 'Memory'.
+2. Unwrap values of type 'Memory' to integral types.
+3. Pretty-displaying functions.
+4. Parsing.
+5. Numeric functions.
+-}
 
 module Membrain.Memory
        ( -- * Data type

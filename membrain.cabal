@@ -2,7 +2,17 @@ cabal-version:       2.4
 name:                membrain
 version:             0.0.0.0
 synopsis:            Type-safe memory units
-description:         Type-safe memory units
+description:
+    @membrain@ provides @newtype@ wrapper for type-safe work with memory units
+    .
+    @
+    __newtype__ Memory (mem :: Nat) = Memory
+    \    { unMemory :: Natural
+    \    }
+    @
+    .
+    This data type stores memory unit value phantom type parameter which is
+    represented as type-level natural number.
 homepage:            https://github.com/kowainik/membrain
 bug-reports:         https://github.com/kowainik/membrain/issues
 license:             MPL-2.0
