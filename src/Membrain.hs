@@ -1,4 +1,18 @@
--- | Type-safe memory units.
+{- | Type-safe memory units. This package has the following structure:
+
+* __"Membrain.Memory":__ main 'Memory' data type with many utility functions.
+* __"Membrain.Units":__ type-level unit multipliers.
+* __"Membrain.Constructors":__ smart constructors for creating values of type
+  'Memory'.
+* __"Membrain.Base":__ type-safe versions of functions from @base@ that work
+  with memory-related values.
+
+@membrain@ aims for qualified imports. Import as follows:
+
+@
+__import__ __qualified__ Membrain __as__ Mem
+@
+-}
 
 module Membrain
        ( module Membrain.Base

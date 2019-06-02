@@ -8,10 +8,23 @@
 {-# LANGUAGE NoStarIsType           #-}
 #endif
 
-{- | This module contains type aliases for memory data units.
+{- | This module contains type aliases for memory data units. According to the
+official standard, there exist two naming conventions for memory units. Standard
+measure prefixes are multipliers of @10@. But there are alternative prefixes
+which end with @bi@ and they are represented as powers of @2@. The difference
+can be displayed in the following table:
 
-TODO: explain kilo/kibi difference.
-
+ +------------+----------------+----------+
+ | Name       | Multipliers    | In bytes |
+ +============+================+==========+
+ | 'Kilobyte' | \( 10 ^ 3 \)   | 1000     |
+ +------------+----------------+----------+
+ | 'Kibibyte' | \( 2 ^ {10} \) | 1024     |
+ +------------+----------------+----------+
+ | 'Megabyte' | \( 10 ^ 6 \)   | 1000000  |
+ +------------+----------------+----------+
+ | 'Mebibyte' | \( 2 ^ {20} \) | 1048576  |
+ +------------+----------------+----------+
 -}
 
 module Membrain.Units
