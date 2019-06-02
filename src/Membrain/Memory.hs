@@ -140,7 +140,7 @@ readMemory
 readMemory (dropWhile isSpace -> str) = case span isDigit str of
     ([], _) -> Nothing
     (_, []) -> Nothing
-    (ds, ('.': rest)) -> case span isDigit rest of
+    (ds, '.': rest) -> case span isDigit rest of
         ([], _)           -> Nothing
         (numerator, unit) -> makeMemory ds numerator unit
     (ds, unit) -> makeMemory ds "0" unit
