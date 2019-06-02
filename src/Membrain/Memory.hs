@@ -1,8 +1,9 @@
-{-# LANGUAGE AllowAmbiguousTypes  #-}
-{-# LANGUAGE DataKinds            #-}
-{-# LANGUAGE FlexibleContexts     #-}
-{-# LANGUAGE TypeInType           #-}
-{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE AllowAmbiguousTypes       #-}
+{-# LANGUAGE DataKinds                 #-}
+{-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE FlexibleContexts          #-}
+{-# LANGUAGE TypeInType                #-}
+{-# LANGUAGE UndecidableInstances      #-}
 
 -- | This module contains 'Memory' data type.
 
@@ -24,6 +25,10 @@ module Membrain.Memory
        , memoryDiff
        , memoryPlus
        , memoryDiv
+
+         -- * Any memory data type
+         -- $any
+       , AnyMemory (..)
        ) where
 
 import Prelude hiding (floor)
@@ -279,6 +284,23 @@ memoryPlus m1 = (<>) (toMemory m1)
 memoryDiv :: Memory mem1 -> Memory mem2 -> Ratio Natural
 memoryDiv (Memory m1) (Memory m2) = m1 % m2
 {-# INLINE memoryDiv #-}
+
+----------------------------------------------------------------------------
+-- AnyMemory
+----------------------------------------------------------------------------
+
+{- $any
+This data type is useful for working with 'Memory' of different units in
+collections, or when 'Memory' of non-specified unit can be returned.
+-}
+
+-- | Existential data type for 'Memory's.
+data AnyMemory
+    = forall (mem :: Nat) . (KnownNat mem, KnownUnitSymbol mem)
+    => MkAnyMemory (Memory mem)
+
+instance Show AnyMemory where
+    show (MkAnyMemory t) = showMemory t
 
 ----------------------------------------------------------------------------
 -- Internal
