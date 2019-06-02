@@ -1,11 +1,12 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE CPP                 #-}
-{-# LANGUAGE DataKinds           #-}
-{-# LANGUAGE FlexibleContexts    #-}
-{-# LANGUAGE TypeFamilies        #-}
-{-# LANGUAGE TypeOperators       #-}
+{-# LANGUAGE AllowAmbiguousTypes    #-}
+{-# LANGUAGE CPP                    #-}
+{-# LANGUAGE DataKinds              #-}
+{-# LANGUAGE FlexibleContexts       #-}
+{-# LANGUAGE TypeFamilies           #-}
+{-# LANGUAGE TypeFamilyDependencies #-}
+{-# LANGUAGE TypeOperators          #-}
 #if ( __GLASGOW_HASKELL__ >= 806 )
-{-# LANGUAGE NoStarIsType        #-}
+{-# LANGUAGE NoStarIsType           #-}
 #endif
 
 {- | This module contains type aliases for memory data units.
@@ -88,7 +89,7 @@ UnitSymbol Kilobyte :: Symbol
 UnitSymbol Mebibyte :: Symbol
 = "MiB"
 -}
-type family UnitSymbol (unit :: Nat) :: Symbol
+type family UnitSymbol (unit :: Nat) = (res :: Symbol) | res -> unit
 
 type instance UnitSymbol 1 = "b"
 type instance UnitSymbol 4 = "n"

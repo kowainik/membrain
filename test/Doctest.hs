@@ -12,4 +12,5 @@ main = do
         : "-XInstanceSigs"
         : "-XScopedTypeVariables"
         : "-XTypeApplications"
+        : "-XViewPatterns"
         : sourceFiles

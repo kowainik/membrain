@@ -12,6 +12,7 @@ module Membrain.Memory
        , memory
        , toMemory
        , showMemory
+       , readMemory
 
          -- * Conversion functions
        , toBits
@@ -27,6 +28,7 @@ module Membrain.Memory
 
 import Prelude hiding (floor)
 
+import Data.Char (isDigit, isSpace)
 import Data.Coerce (coerce)
 import Data.Foldable (foldl')
 import Data.Kind (Type)
@@ -121,6 +123,44 @@ showMemory (Memory m) = showFrac m (nat @mem) ++ unitSymbol @mem
         goFractional n =
             let (q, r) = (n * 10) `divMod` d
             in show q ++ goFractional r
+
+
+{- | Inverse of 'showMemory'.
+
+>>> readMemory @Byte "2.75B"
+Just (Memory {unMemory = 22})
+>>> readMemory @Bit "2.75B"
+Nothing
+-}
+readMemory
+    :: forall (mem :: Nat)
+     . (KnownUnitSymbol mem, KnownNat mem)
+    => String
+    -> Maybe (Memory mem)
+readMemory (dropWhile isSpace -> str) = case span isDigit str of
+    ([], _) -> Nothing
+    (_, []) -> Nothing
+    (ds, ('.': rest)) -> case span isDigit rest of
+        ([], _)           -> Nothing
+        (numerator, unit) -> makeMemory ds numerator unit
+    (ds, unit) -> makeMemory ds "0" unit
+  where
+    makeMemory :: String -> String -> String -> Maybe (Memory mem)
+    makeMemory (read @Natural -> whole) numStr u =
+        if unitSymbol @mem == u
+        then case ((whole * numPow + num) * unit) `divMod` numPow of
+            (b, 0) -> Just $ Memory b
+            _      -> Nothing
+        else Nothing
+      where
+          unit :: Natural
+          unit = nat @mem
+
+          num :: Natural
+          num = read @Natural numStr
+
+          numPow :: Natural
+          numPow = 10 ^ length numStr
 
 {- | Creates 'Memory' of unit @mem@ by the given 'Natural' number. 'Memory's
 smart constructor.
