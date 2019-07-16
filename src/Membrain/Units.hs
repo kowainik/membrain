@@ -96,7 +96,7 @@ UnitSymbol Byte :: Symbol
 = "B"
 >>> :kind! UnitSymbol Kilobyte
 UnitSymbol Kilobyte :: Symbol
-= "KB"
+= "kB"
 >>> :kind! UnitSymbol Mebibyte
 UnitSymbol Mebibyte :: Symbol
 = "MiB"
@@ -107,7 +107,7 @@ type instance UnitSymbol 1 = "b"
 type instance UnitSymbol 4 = "n"
 type instance UnitSymbol 8 = "B"
 
-type instance UnitSymbol 8000                      = "KB"
+type instance UnitSymbol 8000                      = "kB"
 type instance UnitSymbol 8000000                   = "MB"
 type instance UnitSymbol 8000000000                = "GB"
 type instance UnitSymbol 8000000000000             = "TB"

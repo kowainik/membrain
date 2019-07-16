@@ -69,7 +69,7 @@ byte = memory
 {- | Creates 'Memory' in 'Kilobyte's from given 'Natural' as the number of kilobytes.
 
 >>> showMemory $ kilobyte 42
-"42KB"
+"42kB"
 -}
 kilobyte :: Natural -> Memory Kilobyte
 kilobyte = memory
