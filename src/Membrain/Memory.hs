@@ -190,7 +190,7 @@ __Note:__ this changes only view, not model.
 So this operation has zero runtime cost.
 
 >>> showMemory $ toMemory @Kilobyte $ byte 100
-"0.1KB"
+"0.1kB"
 >>> showMemory $ toMemory @Kibibyte $ byte 100
 "0.09765625KiB"
 -}

@@ -29,7 +29,7 @@ unitSymbolTests ::
 
         "Decimal"
         ~~~
-            It "Name Kilobyte  = KB" (UnitSymbol Kilobyte  `Is` "KB")
+            It "Name Kilobyte  = kB" (UnitSymbol Kilobyte  `Is` "kB")
         -*- It "Name Megabyte  = MB" (UnitSymbol Megabyte  `Is` "MB")
         -*- It "Name Gigabyte  = GB" (UnitSymbol Gigabyte  `Is` "GB")
         -*- It "Name Terabyte  = TB" (UnitSymbol Terabyte  `Is` "TB")
