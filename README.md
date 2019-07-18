@@ -7,8 +7,17 @@
 [![Stackage Nightly](http://stackage.org/package/membrain/badge/nightly)](http://stackage.org/nightly/package/membrain)
 [![MPL-2.0 license](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE)
 
-This package implements type-safe memory units. It's build around the following
-data type:
+> "People think dreams aren't real just because they aren't made of matter, of particles. 
+> Dreams are real. But they are made of viewpoints, of images, of memories and puns and lost hopes."
+>
+> ― Neil Gaiman
+
+This package implements type-safe memory units.  It pursues the following goals:
+
+1. Focus on correctness.
+2. Low amount of boilerplate should be required to use the library.
+
+The library is built around the following data type:
 
 ```haskell
 newtype Memory (mem :: Nat) = Memory
@@ -18,11 +27,16 @@ newtype Memory (mem :: Nat) = Memory
 
 This data type stores every memory internally as bits. However, unit multiplier
 is stored as type-level natural number. This approach allows to represent
-different units with low amount of boilerplate.
+different units and implement instances for them with low amount of boilerplate.
 
-`membrain` implements various useful functions to work with `Memory`: smart
-constructors, conversion functions, pretty displaying, parsing, numeric
-functions, type-safe wrappers around functions from `base`.
+`membrain` implements various useful functions to work with `Memory`:
+
+1. Smart constructors.
+2. Conversion functions.
+3. Pretty displaying. 
+4. Dependently-typed parsing.
+5. Numeric functions.
+6. Type-safe wrappers around functions from `base`.
 
 ## Acknowledgement
 
