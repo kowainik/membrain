@@ -12,7 +12,7 @@
 >
 > ― Neil Gaiman
 
-This package implements type-safe memory units.  It pursues the following goals:
+This package implements type-safe memory units. It pursues the following goals:
 
 1. Focus on correctness.
 2. Low amount of boilerplate should be required to use the library.
