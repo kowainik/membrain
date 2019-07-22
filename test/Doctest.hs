@@ -13,4 +13,7 @@ main = do
         : "-XScopedTypeVariables"
         : "-XTypeApplications"
         : "-XViewPatterns"
+        : "-XDerivingStrategies"
+        : "-XGeneralizedNewtypeDeriving"
+        : "-XDeriveGeneric"
         : sourceFiles
