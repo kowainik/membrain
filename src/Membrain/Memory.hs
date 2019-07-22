@@ -1,5 +1,6 @@
 {-# LANGUAGE AllowAmbiguousTypes       #-}
 {-# LANGUAGE DataKinds                 #-}
+{-# LANGUAGE DerivingStrategies        #-}
 {-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE FlexibleContexts          #-}
 {-# LANGUAGE TypeInType                #-}
@@ -48,6 +49,7 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy (Proxy (..))
 import Data.Ratio (Ratio, (%))
 import Data.Semigroup (Semigroup (..))
+import GHC.Generics (Generic)
 import GHC.TypeNats (KnownNat, Nat, natVal)
 import Numeric.Natural (Natural)
 
@@ -67,7 +69,8 @@ bits. To construct values of type 'Memory', use functions from the
 -}
 newtype Memory (mem :: Nat) = Memory
     { unMemory :: Natural
-    } deriving (Show, Read, Eq, Ord)
+    } deriving stock   (Show, Read, Generic)
+      deriving newtype (Eq, Ord)
 
 {- | Semigroup over addition.
 
