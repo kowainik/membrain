@@ -104,15 +104,16 @@ instance Monoid (Memory (mem :: Nat)) where
     {-# INLINE mconcat #-}
 
 {- |
-This 'showMemory' function shows 'Memory' value as 'Double' with measure unit
-suffix. It shows 'Memory' losslessly while used with standardized units of
-measures. The following math fact is used to display 'Memory'.
+This 'showMemory' function shows a 'Memory' value as 'Double' along with the
+measure unit suffix. It shows 'Memory' losslessly while used with standardized
+units of measurements. The following mathematical law is used to display
+'Memory':
 
-A decimal representation written with a repeating final @0@ is said to terminate
-before these zeros. Instead of @1.585000...@ one simply writes @1.585@. The
-decimal is also called a terminating decimal. Terminating decimals represent
-rational numbers of the form \( \cfrac{k}{2^n 5^m} \). If you use units of the
-different form then the 'show' function for 'Memory' hangs.
+A decimal representation written with a repeating final @0@ is supposed to
+terminate before these zeros. Instead of @1.585000...@ one simply writes
+@1.585@. The decimal is also called a terminating decimal. Terminating decimals
+represent rational numbers of the form \( \cfrac{k}{2^n 5^m} \). If you use
+different forms of units then the 'show' function for 'Memory' hangs.
 
 >>> showMemory (Memory 22 :: Memory Byte)
 "2.75B"
