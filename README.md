@@ -7,7 +7,7 @@
 [![Stackage Nightly](http://stackage.org/package/membrain/badge/nightly)](http://stackage.org/nightly/package/membrain)
 [![MPL-2.0 license](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE)
 
-> "People think dreams aren't real just because they aren't made of matter, of particles. 
+> "People think dreams aren't real just because they aren't made of matter, of particles.
 > Dreams are real. But they are made of viewpoints, of images, of memories and puns and lost hopes."
 >
 > ― Neil Gaiman
@@ -16,6 +16,10 @@ This package implements type-safe memory units. It pursues the following goals:
 
 1. Focus on correctness.
 2. Low amount of boilerplate should be required to use the library.
+
+The ideas behind this package are described in the following blog post:
+
+ * [Insane in the Membrain](https://kowainik.github.io/posts/membrain)
 
 The library is built around the following data type:
 
@@ -33,7 +37,7 @@ different units and implement instances for them with low amount of boilerplate.
 
 1. Smart constructors.
 2. Conversion functions.
-3. Pretty displaying. 
+3. Pretty displaying.
 4. Dependently-typed parsing.
 5. Numeric functions.
 6. Type-safe wrappers around functions from `base`.
