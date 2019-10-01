@@ -48,6 +48,7 @@ common common-options
                        -Widentities
                        -Wredundant-constraints
                        -fhide-source-paths
+                       -freduction-depth=500
                        -Wmissing-export-lists
                        -Wpartial-fields
   if impl(ghc >= 8.8.1)
