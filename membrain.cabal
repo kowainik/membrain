@@ -50,6 +50,7 @@ common common-options
                        -fhide-source-paths
                        -Wmissing-export-lists
                        -Wpartial-fields
+                       -Wmissing-deriving-strategies
 
   default-language:    Haskell2010
   default-extensions:  ConstraintKinds
