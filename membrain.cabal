@@ -94,6 +94,7 @@ test-suite membrain-test
                      , type-spec ^>= 0.4.0.0
 
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+                       -freduction-depth=0
 
 test-suite doctest
   import:              common-options
@@ -105,3 +106,4 @@ test-suite doctest
                      , Glob
 
   ghc-options:         -threaded
+                       -freduction-depth=0
