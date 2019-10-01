@@ -48,7 +48,6 @@ common common-options
                        -Widentities
                        -Wredundant-constraints
                        -fhide-source-paths
-                       -freduction-depth=0
                        -Wmissing-export-lists
                        -Wpartial-fields
   if impl(ghc >= 8.8.1)
@@ -77,6 +76,8 @@ library
                          Membrain.Constructors
                          Membrain.Memory
                          Membrain.Units
+  ghc-options:
+                       -freduction-depth=0
 
 test-suite membrain-test
   import:              common-options
