@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
 {-# LANGUAGE AllowAmbiguousTypes       #-}
 {-# LANGUAGE DataKinds                 #-}
 {-# LANGUAGE DerivingStrategies        #-}
@@ -54,7 +55,7 @@ import GHC.Generics (Generic)
 import GHC.TypeNats (KnownNat, Nat, natVal')
 import Numeric.Natural (Natural)
 
-import Membrain.Units (KnownUnitSymbol, unitSymbol)
+import Membrain.Units (KnownUnitSymbol, Terminating, unitSymbol)
 
 import qualified Prelude
 
@@ -119,7 +120,7 @@ different forms of units then the 'show' function for 'Memory' hangs.
 >>> showMemory (Memory 22 :: Memory Byte)
 "2.75B"
 -}
-showMemory :: forall mem . (KnownNat mem, KnownUnitSymbol mem) => Memory mem -> String
+showMemory :: forall mem . (KnownNat mem, KnownUnitSymbol mem, Terminating mem) => Memory mem -> String
 showMemory (Memory m) = showFrac m (nat @mem) ++ unitSymbol @mem
   where
     showFrac :: Natural -> Natural -> String
@@ -308,7 +309,7 @@ collections, or when 'Memory' of non-specified unit can be returned.
 
 -- | Existential data type for 'Memory's.
 data AnyMemory
-    = forall (mem :: Nat) . (KnownNat mem, KnownUnitSymbol mem)
+    = forall (mem :: Nat) . (KnownNat mem, KnownUnitSymbol mem, Terminating mem)
     => MkAnyMemory (Memory mem)
 
 instance Show AnyMemory where

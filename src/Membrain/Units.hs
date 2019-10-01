@@ -5,6 +5,7 @@
 {-# LANGUAGE MagicHash              #-}
 {-# LANGUAGE TypeFamilyDependencies #-}
 {-# LANGUAGE TypeOperators          #-}
+{-# LANGUAGE UndecidableInstances   #-}
 #if ( __GLASGOW_HASKELL__ >= 806 )
 {-# LANGUAGE NoStarIsType           #-}
 #endif
@@ -58,11 +59,15 @@ module Membrain.Units
        , UnitSymbol
        , KnownUnitSymbol
        , unitSymbol
+
+         -- * Type family for unit safety
+       , Terminating
        ) where
 
+import Data.Kind (Constraint)
 import GHC.Exts (Proxy#, proxy#)
-import GHC.TypeLits (KnownSymbol, Symbol, symbolVal')
-import GHC.TypeNats (type (*), Nat)
+import GHC.TypeLits (ErrorMessage (..), KnownSymbol, Symbol, TypeError, symbolVal')
+import GHC.TypeNats (type (*), Div, Mod, Nat)
 
 
 type Bit       = 1
@@ -140,3 +145,24 @@ only with @-XTypeApplications@.
 unitSymbol :: forall (mem :: Nat) . KnownUnitSymbol mem => String
 unitSymbol = symbolVal' (proxy# :: Proxy# (UnitSymbol mem))
 {-# INLINE unitSymbol #-}
+
+-- | Decides whether given decimal is a terminating decimal or not.
+type family Terminating (val :: Nat) :: Constraint where
+  Terminating v = TerminatingOrig v v
+
+type family TerminatingOrig (original :: Nat) (val :: Nat) :: Constraint where
+  TerminatingOrig _ 1 = ()
+  TerminatingOrig original v = Terminating5 original (v `Mod` 5) v
+
+type family Terminating5 (original :: Nat) (mod_result :: Nat) (val :: Nat) :: Constraint where
+  Terminating5 original 0 v = TerminatingOrig original (v `Div` 5)
+  Terminating5 original _ v = Terminating2 original (v `Mod` 2) v
+
+type family Terminating2 (original :: Nat) (mod_result :: Nat) (val :: Nat) :: Constraint where
+  Terminating2 original 0 v = TerminatingOrig original (v `Div` 2)
+  Terminating2 original _ factor =
+    TypeError ('Text "Value "
+         ':<>: 'ShowType original
+         ':<>: 'Text " should be a terminating decimal with only factors 2 and 5"
+         ':<>: 'Text " (ie. should be in form 2^x.5^y)"
+         ':$$: 'Text "but it has factor " ':<>: 'ShowType factor)
