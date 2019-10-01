@@ -3,6 +3,7 @@
 {-# LANGUAGE DerivingStrategies        #-}
 {-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE FlexibleContexts          #-}
+{-# LANGUAGE MagicHash                 #-}
 {-# LANGUAGE TypeInType                #-}
 {-# LANGUAGE UndecidableInstances      #-}
 
@@ -46,11 +47,11 @@ import Data.Coerce (coerce)
 import Data.Foldable (foldl')
 import Data.Kind (Type)
 import Data.List.NonEmpty (NonEmpty)
-import Data.Proxy (Proxy (..))
 import Data.Ratio (Ratio, (%))
 import Data.Semigroup (Semigroup (..))
+import GHC.Exts (Proxy#, proxy#)
 import GHC.Generics (Generic)
-import GHC.TypeNats (KnownNat, Nat, natVal)
+import GHC.TypeNats (KnownNat, Nat, natVal')
 import Numeric.Natural (Natural)
 
 import Membrain.Units (KnownUnitSymbol, unitSymbol)
@@ -318,5 +319,5 @@ instance Show AnyMemory where
 ----------------------------------------------------------------------------
 
 nat :: forall (mem :: Nat) . KnownNat mem => Natural
-nat = natVal (Proxy @mem)
+nat = natVal' (proxy# :: Proxy# mem)
 {-# INLINE nat #-}
