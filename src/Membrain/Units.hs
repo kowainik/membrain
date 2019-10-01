@@ -2,6 +2,7 @@
 {-# LANGUAGE CPP                    #-}
 {-# LANGUAGE DataKinds              #-}
 {-# LANGUAGE FlexibleContexts       #-}
+{-# LANGUAGE MagicHash              #-}
 {-# LANGUAGE TypeFamilyDependencies #-}
 {-# LANGUAGE TypeOperators          #-}
 #if ( __GLASGOW_HASKELL__ >= 806 )
@@ -59,8 +60,8 @@ module Membrain.Units
        , unitSymbol
        ) where
 
-import Data.Proxy (Proxy (..))
-import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
+import GHC.Exts (Proxy#, proxy#)
+import GHC.TypeLits (KnownSymbol, Symbol, symbolVal')
 import GHC.TypeNats (type (*), Nat)
 
 
@@ -137,5 +138,5 @@ only with @-XTypeApplications@.
 "YiB"
 -}
 unitSymbol :: forall (mem :: Nat) . KnownUnitSymbol mem => String
-unitSymbol = symbolVal $ Proxy @(UnitSymbol mem)
+unitSymbol = symbolVal' (proxy# :: Proxy# (UnitSymbol mem))
 {-# INLINE unitSymbol #-}
