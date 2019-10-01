@@ -60,14 +60,19 @@ module Membrain.Units
        , KnownUnitSymbol
        , unitSymbol
 
+#if ( __GLASGOW_HASKELL__ >= 804 )
          -- * Type family for unit safety
        , Terminating
+#endif
        ) where
 
 import Data.Kind (Constraint)
 import GHC.Exts (Proxy#, proxy#)
 import GHC.TypeLits (ErrorMessage (..), KnownSymbol, Symbol, TypeError, symbolVal')
-import GHC.TypeNats (type (*), Div, Mod, Nat)
+import GHC.TypeNats (type (*), Nat)
+#if ( __GLASGOW_HASKELL__ >= 804 )
+import GHC.TypeNats (Div, Mod)
+#endif
 
 
 type Bit       = 1
@@ -146,6 +151,7 @@ unitSymbol :: forall (mem :: Nat) . KnownUnitSymbol mem => String
 unitSymbol = symbolVal' (proxy# :: Proxy# (UnitSymbol mem))
 {-# INLINE unitSymbol #-}
 
+#if ( __GLASGOW_HASKELL__ >= 804 )
 -- | Decides whether given decimal is a terminating decimal or not.
 type family Terminating (val :: Nat) :: Constraint where
   Terminating v = TerminatingOrig v v
@@ -166,3 +172,4 @@ type family Terminating2 (original :: Nat) (mod_result :: Nat) (val :: Nat) :: C
          ':<>: 'Text " should be a terminating decimal with only factors 2 and 5"
          ':<>: 'Text " (ie. should be in form 2^x.5^y)"
          ':$$: 'Text "but it has factor " ':<>: 'ShowType factor)
+#endif

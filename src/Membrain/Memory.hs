@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
 {-# LANGUAGE AllowAmbiguousTypes       #-}
+{-# LANGUAGE CPP                       #-}
 {-# LANGUAGE DataKinds                 #-}
 {-# LANGUAGE DerivingStrategies        #-}
 {-# LANGUAGE ExistentialQuantification #-}
@@ -55,7 +56,11 @@ import GHC.Generics (Generic)
 import GHC.TypeNats (KnownNat, Nat, natVal')
 import Numeric.Natural (Natural)
 
-import Membrain.Units (KnownUnitSymbol, Terminating, unitSymbol)
+import Membrain.Units (KnownUnitSymbol, unitSymbol)
+
+#if ( __GLASGOW_HASKELL__ >= 804 )
+import Membrain.Units (Terminating)
+#endif
 
 import qualified Prelude
 
@@ -105,6 +110,12 @@ instance Monoid (Memory (mem :: Nat)) where
     mconcat = foldl' (<>) mempty
     {-# INLINE mconcat #-}
 
+#if ( __GLASGOW_HASKELL__ >= 804 )
+type IsMemory mem = (KnownNat mem, KnownUnitSymbol mem, Terminating mem)
+#else
+type IsMemory mem = (KnownNat mem, KnownUnitSymbol mem)
+#endif
+
 {- |
 This 'showMemory' function shows a 'Memory' value as 'Double' along with the
 measure unit suffix. It shows 'Memory' losslessly while used with standardized
@@ -120,7 +131,7 @@ different forms of units then the 'show' function for 'Memory' hangs.
 >>> showMemory (Memory 22 :: Memory Byte)
 "2.75B"
 -}
-showMemory :: forall mem . (KnownNat mem, KnownUnitSymbol mem, Terminating mem) => Memory mem -> String
+showMemory :: forall mem . (IsMemory mem) => Memory mem -> String
 showMemory (Memory m) = showFrac m (nat @mem) ++ unitSymbol @mem
   where
     showFrac :: Natural -> Natural -> String
@@ -309,7 +320,7 @@ collections, or when 'Memory' of non-specified unit can be returned.
 
 -- | Existential data type for 'Memory's.
 data AnyMemory
-    = forall (mem :: Nat) . (KnownNat mem, KnownUnitSymbol mem, Terminating mem)
+    = forall (mem :: Nat) . (IsMemory mem)
     => MkAnyMemory (Memory mem)
 
 instance Show AnyMemory where
