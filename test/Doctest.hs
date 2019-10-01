@@ -16,4 +16,5 @@ main = do
         : "-XDerivingStrategies"
         : "-XGeneralizedNewtypeDeriving"
         : "-XDeriveGeneric"
+        : "-freduction-depth=0"
         : sourceFiles
