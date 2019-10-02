@@ -152,24 +152,38 @@ unitSymbol = symbolVal' (proxy# :: Proxy# (UnitSymbol mem))
 {-# INLINE unitSymbol #-}
 
 #if ( __GLASGOW_HASKELL__ >= 804 )
+
 -- | Decides whether given decimal is a terminating decimal or not.
 type family Terminating (val :: Nat) :: Constraint where
   Terminating v = TerminatingOrig v v
 
+-- | Decides whether given decimal is a terminating decimal or not but preserves
+-- the original number. It's used for generating the error message in @Terminating2@.
 type family TerminatingOrig (original :: Nat) (val :: Nat) :: Constraint where
   TerminatingOrig _ 1 = ()
   TerminatingOrig original v = Terminating5 original (v `Mod` 5) v
 
+-- | Decides whether given decimal is divisible by 5 or not.
+-- If it is divisible, divides it and sends it back to @TerminatingOrig@ for further reduction.
+-- If it is not, sends it to @Terminating2@ to see if it's in the form of 2^x.
 type family Terminating5 (original :: Nat) (mod_result :: Nat) (val :: Nat) :: Constraint where
   Terminating5 original 0 v = TerminatingOrig original (v `Div` 5)
   Terminating5 original _ v = Terminating2 original (v `Mod` 2) v
 
+-- | Decides whether given decimal is divisible by 2 or not.
+-- If it is divisible, divides it and sends it back to @TerminatingOrig@ for further reduction.
+-- If it is not, this is an error since;
+--   The value is not 1
+--   The value is not divisible by 2 or 5.
+--
+-- Conditions above means that this is not a "terminating decimal":
+-- https://en.wikipedia.org/wiki/Repeating_decimal
 type family Terminating2 (original :: Nat) (mod_result :: Nat) (val :: Nat) :: Constraint where
   Terminating2 original 0 v = TerminatingOrig original (v `Div` 2)
-  Terminating2 original _ factor =
+  Terminating2 original _ mul =
     TypeError ('Text "Value "
          ':<>: 'ShowType original
-         ':<>: 'Text " should be a terminating decimal with only factors 2 and 5"
+         ':<>: 'Text " should be a terminating decimal with only multipliers being 2 and 5"
          ':<>: 'Text " (ie. should be in form 2^x.5^y)"
-         ':$$: 'Text "but it has factor " ':<>: 'ShowType factor)
+         ':$$: 'Text "but it has the multiplier " ':<>: 'ShowType mul)
 #endif
