@@ -183,7 +183,8 @@ type family Terminating2 (original :: Nat) (mod_result :: Nat) (val :: Nat) :: C
   Terminating2 original _ mul =
     TypeError ('Text "Value "
          ':<>: 'ShowType original
-         ':<>: 'Text " should be a terminating decimal with only multipliers being 2 and 5"
+         ':<>: 'Text " should only multipliers of 2 and 5"
          ':<>: 'Text " (ie. should be in form 2^x.5^y)"
-         ':$$: 'Text "but it has the multiplier " ':<>: 'ShowType mul)
+         ':$$: 'Text "but it has the multiplier " ':<>: 'ShowType mul
+         ':$$: 'Text "See showMemory function for why this is needed.")
 #endif
