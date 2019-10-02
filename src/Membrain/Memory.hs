@@ -111,9 +111,9 @@ instance Monoid (Memory (mem :: Nat)) where
     {-# INLINE mconcat #-}
 
 #if ( __GLASGOW_HASKELL__ >= 804 )
-type IsMemory mem = (KnownNat mem, KnownUnitSymbol mem, Terminating mem)
+type KnownMem mem = (KnownNat mem, KnownUnitSymbol mem, Terminating mem)
 #else
-type IsMemory mem = (KnownNat mem, KnownUnitSymbol mem)
+type KnownMem mem = (KnownNat mem, KnownUnitSymbol mem)
 #endif
 
 {- |
@@ -131,7 +131,7 @@ different forms of units then the 'show' function for 'Memory' hangs.
 >>> showMemory (Memory 22 :: Memory Byte)
 "2.75B"
 -}
-showMemory :: forall mem . (IsMemory mem) => Memory mem -> String
+showMemory :: forall mem . (KnownMem mem) => Memory mem -> String
 showMemory (Memory m) = showFrac m (nat @mem) ++ unitSymbol @mem
   where
     showFrac :: Natural -> Natural -> String
@@ -320,7 +320,7 @@ collections, or when 'Memory' of non-specified unit can be returned.
 
 -- | Existential data type for 'Memory's.
 data AnyMemory
-    = forall (mem :: Nat) . (IsMemory mem)
+    = forall (mem :: Nat) . (KnownMem mem)
     => MkAnyMemory (Memory mem)
 
 instance Show AnyMemory where
