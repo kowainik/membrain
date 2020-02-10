@@ -1,4 +1,8 @@
 {- |
+Copyright: (c) 2018-2020 Kowainik
+SPDX-License-Identifier: MPL-2.0
+Maintainer: Kowainik <xrom.xkov@gmail.com>
+
 This modules introduces more type-safe interface of some standard function to
 work with memory from @base@ package.
 -}

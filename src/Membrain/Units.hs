@@ -9,7 +9,12 @@
 {-# LANGUAGE NoStarIsType           #-}
 #endif
 
-{- | This module contains type aliases for memory data units. According to the
+{- |
+Copyright: (c) 2018-2020 Kowainik
+SPDX-License-Identifier: MPL-2.0
+Maintainer: Kowainik <xrom.xkov@gmail.com>
+
+This module contains type aliases for memory data units. According to the
 official standard, there exist two naming conventions for memory units. Standard
 measure prefixes are multipliers of @10@. But there are alternative prefixes
 which end with @bi@ and they are represented as powers of @2@. The difference

@@ -7,7 +7,12 @@
 {-# LANGUAGE TypeInType                #-}
 {-# LANGUAGE UndecidableInstances      #-}
 
-{- | This module contains 'Memory' data type and various utility functions:
+{- |
+Copyright: (c) 2018-2020 Kowainik
+SPDX-License-Identifier: MPL-2.0
+Maintainer: Kowainik <xrom.xkov@gmail.com>
+
+This module contains 'Memory' data type and various utility functions:
 
 1. Create values of type 'Memory'.
 2. Unwrap values of type 'Memory' to integral types.

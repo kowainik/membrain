@@ -1,4 +1,9 @@
-{- | Type-safe memory units. This package has the following structure:
+{- |
+Copyright: (c) 2018-2020 Kowainik
+SPDX-License-Identifier: MPL-2.0
+Maintainer: Kowainik <xrom.xkov@gmail.com>
+
+Type-safe memory units. This package has the following structure:
 
 * __"Membrain.Memory":__ main 'Memory' data type with many utility functions.
 * __"Membrain.Units":__ type-level unit multipliers.
