@@ -1,9 +1,1 @@
-resolver: lts-13.23
-
-extra-deps:
-  - type-spec-0.4.0.0
-  - hedgehog-1.0
-  - hspec-2.7.1
-  - hspec-core-2.7.1      # for hspec
-  - hspec-discover-2.7.1  # for hspec
-  - QuickCheck-2.13.1     # for hspec
+resolver: nightly-2020-02-08
