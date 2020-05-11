@@ -1,7 +1,7 @@
 # membrain
 
 ![memory-brain](https://user-images.githubusercontent.com/4276606/61223141-aa6bf400-a74e-11e9-876a-09e883ee5d5a.png)
-[![Build status](https://img.shields.io/travis/kowainik/membrain.svg?logo=travis)](https://travis-ci.org/kowainik/membrain)
+[![GitHub CI](https://github.com/kowainik/membrain/workflows/CI/badge.svg)](https://github.com/kowainik/membrain/actions)
 [![Hackage](https://img.shields.io/hackage/v/membrain.svg?logo=haskell)](https://hackage.haskell.org/package/membrain)
 [![Stackage Lts](http://stackage.org/package/membrain/badge/lts)](http://stackage.org/lts/package/membrain)
 [![Stackage Nightly](http://stackage.org/package/membrain/badge/nightly)](http://stackage.org/nightly/package/membrain)
