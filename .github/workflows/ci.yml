@@ -63,7 +63,7 @@ jobs:
 
     - name: Test
       run: |
-        cabal test --enable-tests
+        cabal test --enable-tests --test-show-details=direct
 
   stack:
     name: stack / ghc ${{ matrix.ghc }}
